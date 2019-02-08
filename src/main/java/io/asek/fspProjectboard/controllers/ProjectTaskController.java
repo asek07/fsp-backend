@@ -45,7 +45,6 @@ public class ProjectTaskController {
 
         //Add a new project task
         projectTaskRepository.save(p);
-
         return new ResponseEntity("Added successfully.", HttpStatus.OK);
     }
 
