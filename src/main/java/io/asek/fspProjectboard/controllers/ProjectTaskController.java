@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/project")
 @CrossOrigin
@@ -28,6 +30,14 @@ public class ProjectTaskController {
 
         ProjectTask p = projectTaskRepository.findProjectTaskById(id);
         return new ResponseEntity(p, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAll", produces = "application/json")
+    public ResponseEntity getAllTasks() {
+
+        List<ProjectTask> tasks = projectTaskRepository.findAll();
+
+        return new ResponseEntity(tasks, HttpStatus.OK);
     }
 
     @PostMapping(value = "/addTask", headers = "Accept=*/*", produces = "application/json", consumes="application/json")

@@ -14,6 +14,8 @@ public class ProjectTask {
     private String description;
     private String status;
 
+    public Long getId() { return id; }
+
     public String getSummary() {
         return summary;
     }
