@@ -1,6 +1,7 @@
 package io.asek.fspProjectboard.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "project_tasks")
@@ -10,6 +11,7 @@ public class ProjectTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Summary cannot be blank.")
     private String summary;
     private String description;
     private String status;

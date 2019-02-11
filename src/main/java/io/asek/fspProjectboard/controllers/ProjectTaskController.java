@@ -3,6 +3,7 @@ package io.asek.fspProjectboard.controllers;
 import io.asek.fspProjectboard.DTO.ProjectTaskDTO;
 import io.asek.fspProjectboard.model.ProjectTask;
 import io.asek.fspProjectboard.repositories.ProjectTaskRepository;
+import io.asek.fspProjectboard.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,26 +16,27 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class ProjectTaskController {
 
+//    Controllers should be referred to as routing mechanisms,
+//    reduce complex login in controllers, leave that to service/repository
+
     @Autowired
     private ProjectTaskRepository projectTaskRepository;
+
+    @Autowired
+    private ProjectTaskService projectTaskService;
 
     @GetMapping(value = "/get/{id}", produces = "application/json")
     public ResponseEntity getProjectTask(@PathVariable long id) {
 
-        boolean projectTaskExists = projectTaskRepository.existsById(id);
+        ProjectTask p = projectTaskService.getProjectTaskById(id);
 
-        if(!projectTaskExists) {
-            return new ResponseEntity(String.format("No records with the id=%d exist.", id), HttpStatus.OK);
-        }
-
-        ProjectTask p = projectTaskRepository.findProjectTaskById(id);
         return new ResponseEntity(p, HttpStatus.OK);
     }
 
     @GetMapping(value = "/getAll", produces = "application/json")
     public ResponseEntity getAllTasks() {
 
-        List<ProjectTask> tasks = projectTaskRepository.findAll();
+        List<ProjectTask> tasks = projectTaskService.getAllProjectTasks();
 
         return new ResponseEntity(tasks, HttpStatus.OK);
     }
@@ -43,8 +45,10 @@ public class ProjectTaskController {
     public ResponseEntity addTask(@RequestBody ProjectTask p) {
 
         //Add a new project task
-        projectTaskRepository.save(p);
-        return new ResponseEntity("Added successfully.", HttpStatus.OK);
+        //projectTaskRepository.save(p);
+
+        ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(p);
+        return new ResponseEntity(newPT, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteTask/{id}")
