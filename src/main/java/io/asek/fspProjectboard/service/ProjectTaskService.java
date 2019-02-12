@@ -30,7 +30,8 @@ public class ProjectTaskService {
         boolean exists = projectTaskRepository.existsById(id);
 
         if (!exists) {
-            throw new ProjectTaskNotFoundException(String.format("id %d not found", id));
+              throw new ProjectTaskNotFoundException(String.format("id=%d not found", id));
+//            throw new RuntimeException("test!");
         }
 
         ProjectTask projectTask = projectTaskRepository.findProjectTaskById(id);
@@ -47,6 +48,19 @@ public class ProjectTaskService {
     }
 
     //delete item
+    public String deleteProjectTaskById(Long id) {
+
+        boolean exists = projectTaskRepository.existsById(id);
+
+        if (!exists) {
+            throw new ProjectTaskNotFoundException(String.format("Task with id=%d does not exist.", id));
+        }
+
+        projectTaskRepository.deleteById(id);
+
+        return String.format("Deleted id=%d succesfully.", id);
+
+    }
 
 
 }

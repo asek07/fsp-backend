@@ -1,14 +1,19 @@
 package io.asek.fspProjectboard.controllers;
 
-import io.asek.fspProjectboard.DTO.ProjectTaskDTO;
 import io.asek.fspProjectboard.model.ProjectTask;
 import io.asek.fspProjectboard.repositories.ProjectTaskRepository;
 import io.asek.fspProjectboard.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/project")
@@ -33,7 +38,7 @@ public class ProjectTaskController {
         return new ResponseEntity(p, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getAll", produces = "application/json")
+    @GetMapping(value = "/getAllTasks", produces = "application/json")
     public ResponseEntity getAllTasks() {
 
         List<ProjectTask> tasks = projectTaskService.getAllProjectTasks();
@@ -41,45 +46,30 @@ public class ProjectTaskController {
         return new ResponseEntity(tasks, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/addTask", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
-    public ResponseEntity addTask(@RequestBody ProjectTask p) {
+    @PostMapping(value = "/addOrUpdate", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
+    public ResponseEntity saveOrUpdateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result) {
 
-        //Add a new project task
-        //projectTaskRepository.save(p);
+        if (result.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
 
-        ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(p);
-        return new ResponseEntity(newPT, HttpStatus.OK);
+            for (FieldError error : result.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+
+            return new ResponseEntity(errorMap, HttpStatus.BAD_REQUEST);
+        }
+
+        ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(projectTask);
+
+        return new ResponseEntity(newPT, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/deleteTask/{id}")
     public ResponseEntity deleteProjectTask(@PathVariable Long id) {
 
-        boolean projectTaskExists = projectTaskRepository.existsById(id);
+        String deleteTask = projectTaskService.deleteProjectTaskById(id);
 
-        if(!projectTaskExists) {
-            return new ResponseEntity(String.format("Cannot find project task with id=%d", id), HttpStatus.OK);
-        }
-
-        projectTaskRepository.deleteById(id);
-        return new ResponseEntity("Deleted successfully.", HttpStatus.OK);
-    }
-
-    @PutMapping(value = "update/{id}", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
-    public ResponseEntity updateProjectTask(@PathVariable Long id, @RequestBody ProjectTaskDTO projectTaskDTO) {
-
-        boolean projectTaskExists = projectTaskRepository.existsById(id);
-
-        if(!projectTaskExists) {
-            return new ResponseEntity(String.format("Cannot find project task with id=%d", id), HttpStatus.OK);
-        }
-
-        ProjectTask p = projectTaskRepository.findProjectTaskById(id);
-        p.setSummary(projectTaskDTO.getSummary());
-        p.setStatus(projectTaskDTO.getStatus());
-        p.setDescription(projectTaskDTO.getDescription());
-
-        projectTaskRepository.save(p);
-        return new ResponseEntity("Updated successfully.", HttpStatus.OK);
+        return new ResponseEntity(deleteTask, HttpStatus.OK);
     }
 
 }
