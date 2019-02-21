@@ -1,6 +1,7 @@
 package io.asek.fspProjectboard.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -8,13 +9,15 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String name;
     private String description;
 
-    private List<ProjectTask> projectTasks;
+    @OneToMany(mappedBy = "projectId")
+    private List<ProjectTask> projectTasks = new ArrayList<ProjectTask>();
 
     public Long getId() {
         return id;
@@ -38,6 +41,10 @@ public class Project {
 
     public List<ProjectTask> getProjectTasks() {
         return projectTasks;
+    }
+
+    public void addTask(ProjectTask p) {
+        this.projectTasks.add(p);
     }
 
     public void setProjectTasks(List<ProjectTask> projectTasks) {

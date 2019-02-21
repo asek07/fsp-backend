@@ -1,7 +1,6 @@
 package io.asek.fspProjectboard.controllers;
 
 import io.asek.fspProjectboard.model.ProjectTask;
-import io.asek.fspProjectboard.repositories.ProjectTaskRepository;
 import io.asek.fspProjectboard.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,23 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/project")
+@RequestMapping(value = "/project_tasks")
 @CrossOrigin
 @SuppressWarnings("unchecked")
 public class ProjectTaskController {
 
 //    Controllers should be referred to as routing mechanisms,
 //    reduce complex login in controllers, leave that to service/repository
-
-    @Autowired
-    private ProjectTaskRepository projectTaskRepository;
 
     @Autowired
     private ProjectTaskService projectTaskService;

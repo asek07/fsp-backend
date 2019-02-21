@@ -11,9 +11,9 @@ public class ProjectTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    @JoinColumn(name = "id", table = "projects")
-    private Long project_id;
+    @ManyToOne(targetEntity = Project.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_project_id")
+    private Long projectId;
 
     @NotBlank(message = "Summary cannot be blank.")
     private String summary;
@@ -21,6 +21,14 @@ public class ProjectTask {
     private String status;
 
     public Long getId() { return id; }
+
+    public Long getProjectId() {
+        return this.projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 
     public String getSummary() {
         return summary;

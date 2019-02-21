@@ -3,10 +3,12 @@ package io.asek.fspProjectboard.service;
 import io.asek.fspProjectboard.exceptions.ProjectAlreadyExistsException;
 import io.asek.fspProjectboard.exceptions.ProjectNotFoundException;
 import io.asek.fspProjectboard.model.Project;
+import io.asek.fspProjectboard.model.ProjectTask;
 import io.asek.fspProjectboard.repositories.ProjectRepository;
-import io.asek.fspProjectboard.repositories.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectService {
@@ -15,8 +17,9 @@ public class ProjectService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private ProjectTaskRepository projectTaskRepository;
+    private ProjectTaskService projectTaskService;
 
+    //get
     public Project getProjectById(Long id) {
 
         boolean exists = projectRepository.existsById(id);
@@ -27,23 +30,33 @@ public class ProjectService {
 
         Project project = projectRepository.findProjectById(id);
 
-        return project;
+        List<ProjectTask> projectTasks = projectTaskService.getAllTasksByProjectId(id);
 
+        project.setProjectTasks(projectTasks);
+
+        return project;
     }
 
+    //add
     public String addProject(Project project) {
 
-        boolean exists = projectRepository.existsById(project.getId());
+//        boolean exists = projectRepository.existsById(project.getId());
+//
+//        if (exists) {
+//            throw new ProjectAlreadyExistsException(String.format("Project with id %d already exists.", project.getId()));
+//        }
 
-        if (exists) {
-            throw new ProjectAlreadyExistsException(String.format("Project with id %d already exists.", project.getId()));
-        }
+        Project newProject = new Project();
 
-        projectRepository.save(project);
+        newProject.setName(project.getName());
+        newProject.setDescription(project.getDescription());
+
+        projectRepository.save(newProject);
 
         return String.format("Successfully saved '%s'", project.getName());
     }
 
+    //delete
     public String deleteProjectById(Long id) {
 
         boolean exists = projectRepository.existsById(id);
@@ -58,22 +71,19 @@ public class ProjectService {
 
 
         return "";
-
     }
 
+    //update
     public String updateProject(Project project) {
 
         boolean exists = projectRepository.existsById(project.getId());
 
         if (!exists) {
-//          throw error
+            throw new ProjectNotFoundException(String.format("Project with id %d does not exist.",project.getId()));
         }
 
         projectRepository.save(project);
 
         return "Successfully updated project info.";
-
     }
-
-
 }

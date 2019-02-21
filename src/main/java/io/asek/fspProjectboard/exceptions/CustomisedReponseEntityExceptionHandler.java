@@ -1,6 +1,5 @@
 package io.asek.fspProjectboard.exceptions;
 
-import javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,6 +27,7 @@ public class CustomisedReponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<ErrorDetails> handleNotFoundException(ProjectTaskNotFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
                 request.getDescription(false));
+
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
@@ -36,6 +36,7 @@ public class CustomisedReponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<ErrorDetails> handleNotFoundException(ProjectNotFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
                 request.getDescription(false));
+
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
@@ -44,6 +45,7 @@ public class CustomisedReponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<ErrorDetails> handleNotFoundException(ProjectAlreadyExistsException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
                 request.getDescription(false));
+
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 }

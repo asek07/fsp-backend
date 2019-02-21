@@ -1,23 +1,49 @@
 package io.asek.fspProjectboard.controllers;
 
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.asek.fspProjectboard.model.Project;
+import io.asek.fspProjectboard.service.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value = "/project")
 @CrossOrigin
-@RequestMapping(value = "projects")
+@SuppressWarnings("unchecked")
 public class ProjectController {
 
+    @Autowired
+    private ProjectService projectService;
+
     //GET
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity getProject(@PathVariable Long id) {
+
+        Project p = projectService.getProjectById(id);
+
+        return new ResponseEntity(p, HttpStatus.OK);
+}
 
     //ADD
+    @PostMapping(value = "/addProject", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
+    public ResponseEntity addProject(@RequestBody Project project) {
+
+        String addProject = projectService.addProject(project);
+
+        return new ResponseEntity(addProject, HttpStatus.CREATED);
+    }
 
     //UPDATE
+    @PutMapping(value = "/update")
+    public ResponseEntity updateProjectInfo(@RequestBody Project project) {
+
+        String updateProject = projectService.updateProject(project);
+
+        return new ResponseEntity(updateProject, HttpStatus.OK);
+
+    }
 
     //DELETE
-
-
 
 }
