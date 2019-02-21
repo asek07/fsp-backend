@@ -31,7 +31,6 @@ public class ProjectTaskService {
 
         if (!exists) {
               throw new ProjectTaskNotFoundException(String.format("id=%d not found", id));
-//            throw new RuntimeException("test!");
         }
 
         ProjectTask projectTask = projectTaskRepository.findProjectTaskById(id);
@@ -59,7 +58,6 @@ public class ProjectTaskService {
         projectTaskRepository.deleteById(id);
 
         return String.format("Deleted id=%d succesfully.", id);
-
     }
 
 

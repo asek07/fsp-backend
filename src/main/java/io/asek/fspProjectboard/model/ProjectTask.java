@@ -11,6 +11,10 @@ public class ProjectTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToMany
+    @JoinColumn(name = "id", table = "projects")
+    private Long project_id;
+
     @NotBlank(message = "Summary cannot be blank.")
     private String summary;
     private String description;

@@ -30,4 +30,20 @@ public class CustomisedReponseEntityExceptionHandler extends ResponseEntityExcep
                 request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    /* Specific error handling for ProjectNotFoundException */
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleNotFoundException(ProjectNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    /* Specific error handling for ProjectNotFoundException */
+    @ExceptionHandler(ProjectAlreadyExistsException.class)
+    public final ResponseEntity<ErrorDetails> handleNotFoundException(ProjectAlreadyExistsException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
 }
