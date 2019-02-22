@@ -41,6 +41,8 @@ public class ProjectTaskController {
         return new ResponseEntity(tasks, HttpStatus.OK);
     }
 
+//  TODO
+//    create two separate end points for UPDATE and POST (add)
     @PostMapping(value = "/addOrUpdate", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
     public ResponseEntity saveOrUpdateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result) {
 
