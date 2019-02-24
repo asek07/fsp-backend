@@ -22,7 +22,7 @@ public class ProjectTaskController {
 //    Controllers should be referred to as routing mechanisms,
 //    reduce complex login in controllers, leave that to service/repository
 
-    @Autowired
+    @Autowired(required = true)
     private ProjectTaskService projectTaskService;
 
     @GetMapping(value = "/get/{id}", produces = "application/json")
@@ -43,8 +43,9 @@ public class ProjectTaskController {
 
 //  TODO
 //    create two separate end points for UPDATE and POST (add)
-    @PostMapping(value = "/addOrUpdate", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
-    public ResponseEntity saveOrUpdateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result) {
+    @PostMapping(value = "/{projectId}/add", headers = "Accept=*/*", produces = "application/json", consumes="application/json")
+    public ResponseEntity saveProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
+                                                  @PathVariable Long projectId) {
 
         if (result.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -56,9 +57,11 @@ public class ProjectTaskController {
             return new ResponseEntity(errorMap, HttpStatus.BAD_REQUEST);
         }
 
-        ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(projectTask);
+        projectTask.setProjectId(projectId);
 
-        return new ResponseEntity(newPT, HttpStatus.CREATED);
+        projectTaskService.saveProjectTask(projectTask);
+
+        return new ResponseEntity("Saved successfully.", HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/deleteTask/{id}")

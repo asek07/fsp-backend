@@ -11,17 +11,17 @@ import java.util.List;
 @Service
 public class ProjectTaskService {
 
-    @Autowired
+    @Autowired(required = true)
     private ProjectTaskRepository projectTaskRepository;
 
     //save or update
-    public ProjectTask saveOrUpdateProjectTask(ProjectTask projectTask) {
+    public void saveProjectTask(ProjectTask projectTask) {
 
         if (projectTask.getStatus() == null || projectTask.getStatus() == "") {
             projectTask.setStatus("TO_DO");
         }
 
-        return projectTaskRepository.save(projectTask);
+         projectTaskRepository.save(projectTask);
     }
 
     //get single item

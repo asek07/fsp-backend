@@ -40,18 +40,7 @@ public class ProjectService {
     //add
     public String addProject(Project project) {
 
-//        boolean exists = projectRepository.existsById(project.getId());
-//
-//        if (exists) {
-//            throw new ProjectAlreadyExistsException(String.format("Project with id %d already exists.", project.getId()));
-//        }
-
-        Project newProject = new Project();
-
-        newProject.setName(project.getName());
-        newProject.setDescription(project.getDescription());
-
-        projectRepository.save(newProject);
+        projectRepository.save(project);
 
         return String.format("Successfully saved '%s'", project.getName());
     }
